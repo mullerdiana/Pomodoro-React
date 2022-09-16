@@ -1,0 +1,3 @@
+>npx create-react-app pomodoro
+>cd pomodoro
+>npm start
