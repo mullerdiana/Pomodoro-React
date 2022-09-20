@@ -17,7 +17,7 @@ export const usePomodoroDefaultTimer = () => {
   });
  
   // const [isPaused, setIsPaused] = useState(false);
-  const [hasFinished, setHasFinished] = useState(false);
+  // const [hasFinished, setHasFinished] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(defaultTime[0].workTime * 60);
 
@@ -32,38 +32,32 @@ export const usePomodoroDefaultTimer = () => {
   function WorkPomodoro() {
     console.log("workPomodoro");
     setIsCounting(true);
+    setStepPomodoro({...stepPomodoro, work:true})
   }
 
 
-  // function BreakPomodoro() {
-  //   console.log("intervalo");
-  //   setCurrentTime(defaultTime.workTime * 60);
-  //   if(sessions>1 ? setCurrentTime(defaultTime.shortTime * 60) : setCurrentTime(defaultTime.longTime * 60));
-  // }
+  function BreakPomodoro() {
+    console.log("intervalo");
+    setCurrentTime(defaultTime[1].shortTime * 60)
+    // if(sessions>1 ? setCurrentTime(defaultTime[0].shortTime * 60) : setCurrentTime(defaultTime[0].longTime * 60));
+  }
 
   useEffect(()=>{
-    let interval = setInterval(() => {
+    if(currentTime > 0 && isCounting){ 
+      let interval = setInterval(() => {
       isCounting && setCurrentTime((currentTime) => (currentTime >=1 ? currentTime -1 : 0))
     }, 100);
 
     return () => {
       clearInterval(interval)
     }
-    // if(currentTime > 0 && isCounting){
-    //   let countdownTimeOut = setInterval(()=>{
-    //     setCurrentTime(currentTime -1);
-    //   }, 100)
-    // } 
-    // else if(isCounting && currentTime === 0){
-    //   console.log('finished')
-      
-    //   setIsCounting(false);
-    //   BreakPomodoro();
+    }  else if(isCounting && currentTime === 0){
+      BreakPomodoro();
     // } 
     // else if(isCounting && currentTime === 0){
 
-    // }
-  }, [isCounting]);
+    }
+  }, [currentTime, isCounting]);
 
   return {
     StartPomodoro,
