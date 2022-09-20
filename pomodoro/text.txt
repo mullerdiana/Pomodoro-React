@@ -1,0 +1,17 @@
+//functions
+start - iniciar com valor de work, título de work, informar o momento do ciclo 
+
+work - state para controlar pelo useEffect, descontar 1 a cada segundo do state de currentTime
+
+break
+
+pause
+
+continue
+
+reset
+
+//states
+currentTime (workTime) - shortBreak/longBreak
+step(work) - work/break
+isCounting(false);
