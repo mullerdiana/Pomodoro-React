@@ -4,7 +4,7 @@ import { usePomodoroDefaultTimer } from './usePomodoroDefaultTimer';
 
 export function PomodoroDefaultTimer() {
     const {
-        StartPomodoro,
+        startPomodoro,
         minutes,
         seconds
     } = usePomodoroDefaultTimer();
@@ -12,7 +12,7 @@ export function PomodoroDefaultTimer() {
    return(
     <MainCard>     
         <Timer>{minutes}:{seconds}</Timer> 
-        <button onClick={StartPomodoro}>Start</button>
+        <button onClick={startPomodoro}>Start</button>
     </MainCard>
    )
    
