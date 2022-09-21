@@ -4,15 +4,15 @@ export const usePomodoroDefaultTimer = () => {
   const [defaultTime, setDefaultTime] = useState([
     { workTime: 1, message: "Foque" },
     { shortTime: 0.5, message: "Descanse" },
-    { longTime: 15, message: "Descanse" },
+    { longTime: 1.5, message: "Descanse" },
   ]);
-  const [sessions, setSessions] = useState(3);
+  const [sessions, setSessions] = useState(2);
   const [isCounting, setIsCounting] = useState(false);
 
   const [stepPomodoro, setStepPomodoro] = useState("work");
 
   // const [isPaused, setIsPaused] = useState(false);
-  // const [hasFinished, setHasFinished] = useState(false);
+  const [hasFinished, setHasFinished] = useState(false);
 
   const [currentTime, setCurrentTime] = useState(defaultTime[0].workTime * 60);
 
@@ -42,6 +42,7 @@ export const usePomodoroDefaultTimer = () => {
     } else {
       setCurrentTime(defaultTime[2].longTime * 60);
       setStepPomodoro("longBreak");
+      setHasFinished(true);
     }
   }
 
@@ -68,8 +69,7 @@ export const usePomodoroDefaultTimer = () => {
       } else if (isCounting && currentTime === 0) {
         breakPomodoro();
       }
-    }
-     else if (stepPomodoro === "shortBreak") {
+    } else if (stepPomodoro !== "work") {
       if (currentTime > 0 && isCounting) {
         let interval = setInterval(() => {
           isCounting &&
@@ -81,11 +81,12 @@ export const usePomodoroDefaultTimer = () => {
         return () => {
           clearInterval(interval);
         };
-      } else if (isCounting && currentTime === 0) {
+      } else if (isCounting && currentTime === 0 && stepPomodoro === 'shortBreak') {
         workPomodoro();
+      } else if (isCounting && currentTime === 0 && stepPomodoro === 'longBreak') {
+       endPomodoro();
       }
-    }  
-    
+    } 
   }, [currentTime, isCounting]);
 
   return {
