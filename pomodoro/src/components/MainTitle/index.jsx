@@ -6,7 +6,7 @@ export function Title() {
   return (
     <TextContainer>
       <TextContent>
-        Pomodoro
+       Pomodoro
       </TextContent>
     </TextContainer>
   );

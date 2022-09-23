@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
-export const usePomodoroDefaultTimer = () => {
-  const [defaultTime, setDefaultTime] = useState([
+export const usePomodoroConfigTimer = () => {
+  const [configTime, setConfigTime] = useState([
     { workTime: 1, message: "Foque" },
     { shortTime: 0.5, message: "Descanse" },
     { longTime: 1.5, message: "Descanse" },
@@ -15,7 +15,7 @@ export const usePomodoroDefaultTimer = () => {
   const [isContinue, setIsContinue] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
 
-  const [currentTime, setCurrentTime] = useState(defaultTime[0].workTime * 60);
+  const [currentTime, setCurrentTime] = useState(configTime[0].workTime * 60);
 
   const minutes = Math.floor(currentTime / 60);
   const seconds = Math.floor(currentTime % 60);
@@ -28,7 +28,7 @@ export const usePomodoroDefaultTimer = () => {
   function workPomodoro() {
     console.log("workPomodoro()");
     setIsCounting(true);
-    setCurrentTime(defaultTime[0].workTime * 60);
+    setCurrentTime(configTime[0].workTime * 60);
     setStepPomodoro("work");
   }
 
@@ -36,12 +36,12 @@ export const usePomodoroDefaultTimer = () => {
     console.log("intervalo");
     console.log(sessions);
     if (sessions > 1) {
-      setCurrentTime(defaultTime[1].shortTime * 60);
+      setCurrentTime(configTime[1].shortTime * 60);
       setStepPomodoro("shortBreak");
       setSessions(sessions - 1);
       console.log("sessions", sessions);
     } else {
-      setCurrentTime(defaultTime[2].longTime * 60);
+      setCurrentTime(configTime[2].longTime * 60);
       setStepPomodoro("longBreak");
       setHasFinished(true);
     }
