@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 
 export const usePomodoroConfigTimer = () => {
-  const [configTime, setConfigTime] = useState([
-    { workTime: 1, message: "Foque" },
-    { shortTime: 0.5, message: "Descanse" },
-    { longTime: 1.5, message: "Descanse" },
-  ]);
+  const [configTime, setConfigTime] = useState({
+    workTime: 0,
+    shortTime: 0,
+    longTime: 0,
+    sessions: 0,
+  });
+
   const [sessions, setSessions] = useState(2);
   const [isCounting, setIsCounting] = useState(false);
   const interval = useRef();
@@ -15,10 +17,18 @@ export const usePomodoroConfigTimer = () => {
   const [isContinue, setIsContinue] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
 
-  const [currentTime, setCurrentTime] = useState(configTime[0].workTime * 60);
+  const [currentTime, setCurrentTime] = useState(configTime.workTime * 60);
 
   const minutes = Math.floor(currentTime / 60);
   const seconds = Math.floor(currentTime % 60);
+
+  const inputChangeHandler = (event) => {
+    const value = event.target.value;
+    setConfigTime((prevState) => {
+      return { ...prevState, [event.target.name]: Number(value) };
+    });
+    console.log('inputChangeHandler', configTime);
+  };
 
   function startPomodoro() {
     console.log("startPomodoro()");
@@ -28,7 +38,7 @@ export const usePomodoroConfigTimer = () => {
   function workPomodoro() {
     console.log("workPomodoro()");
     setIsCounting(true);
-    setCurrentTime(configTime[0].workTime * 60);
+    setCurrentTime(configTime.workTime * 60);
     setStepPomodoro("work");
   }
 
@@ -36,12 +46,12 @@ export const usePomodoroConfigTimer = () => {
     console.log("intervalo");
     console.log(sessions);
     if (sessions > 1) {
-      setCurrentTime(configTime[1].shortTime * 60);
+      setCurrentTime(configTime.shortTime * 60);
       setStepPomodoro("shortBreak");
       setSessions(sessions - 1);
       console.log("sessions", sessions);
     } else {
-      setCurrentTime(configTime[2].longTime * 60);
+      setCurrentTime(configTime.longTime * 60);
       setStepPomodoro("longBreak");
       setHasFinished(true);
     }
@@ -52,14 +62,14 @@ export const usePomodoroConfigTimer = () => {
     setIsCounting(false);
     setStepPomodoro("finished");
   }
- 
+
   function stopPomodoro() {
     console.log("pausa");
     clearInterval(interval.current);
-    console.log('currentTime', currentTime);
-    console.log('interval.current', interval.current);
+    console.log("currentTime", currentTime);
+    console.log("interval.current", interval.current);
   }
-  
+
   // function continuePomodoro() {
   //   console.log("continuar");
   //   console.log('currentTime', currentTime);
@@ -69,10 +79,14 @@ export const usePomodoroConfigTimer = () => {
   // }
 
   useEffect(() => {
+    console.log(configTime);
+  },[configTime]);
+
+  useEffect(() => {
     if (stepPomodoro === "work") {
       console.log("pegou work true");
       if (currentTime > 0 && isCounting) {
-       interval.current = setInterval(() => {
+        interval.current = setInterval(() => {
           isCounting &&
             setCurrentTime((currentTime) =>
               currentTime >= 1 ? currentTime - 1 : 0
@@ -97,19 +111,21 @@ export const usePomodoroConfigTimer = () => {
         return () => {
           clearInterval(interval.current);
         };
-      } else if (currentTime === 0 && stepPomodoro === 'shortBreak') {
+      } else if (currentTime === 0 && stepPomodoro === "shortBreak") {
         workPomodoro();
-      } else if (currentTime === 0 && stepPomodoro === 'longBreak') {
-       endPomodoro();
+      } else if (currentTime === 0 && stepPomodoro === "longBreak") {
+        endPomodoro();
       }
-    } 
+    }
   }, [currentTime, isCounting]);
 
   return {
+    configTime,
     stepPomodoro,
     startPomodoro,
     stopPomodoro,
     minutes,
     seconds,
+    inputChangeHandler,
   };
 };
