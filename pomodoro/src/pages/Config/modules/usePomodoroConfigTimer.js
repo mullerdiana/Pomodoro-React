@@ -11,8 +11,10 @@ export const usePomodoroConfigTimer = () => {
   const [sessions, setSessions] = useState(2);
   const [isCounting, setIsCounting] = useState(false);
   const interval = useRef();
+  const [status, setStatus] = useState('Start');
 
   const [stepPomodoro, setStepPomodoro] = useState("work");
+  
 
   const [isContinue, setIsContinue] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
@@ -68,6 +70,8 @@ export const usePomodoroConfigTimer = () => {
     clearInterval(interval.current);
     console.log("currentTime", currentTime);
     console.log("interval.current", interval.current);
+    setStatus('Reset');
+    console.log('status', status);
   }
 
   // function continuePomodoro() {
@@ -117,11 +121,12 @@ export const usePomodoroConfigTimer = () => {
         endPomodoro();
       }
     }
-  }, [currentTime, isCounting]);
+  }, [currentTime, isCounting, status]);
 
   return {
     configTime,
     stepPomodoro,
+    status,
     startPomodoro,
     stopPomodoro,
     minutes,
